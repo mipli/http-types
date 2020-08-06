@@ -4,40 +4,42 @@ use std::fmt::{self, Display};
 ///
 /// As defined by [rfc7231 section 6](https://tools.ietf.org/html/rfc7231#section-6).
 /// [Read more](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
-#[repr(u16)]
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-pub enum StatusCode {
+pub struct StatusCode(pub u16);
+
+#[allow(non_upper_case_globals)]
+impl StatusCode {
     /// 100 Continue
     ///
     /// This interim response indicates that everything so far is OK and that
     /// the client should continue the request, or ignore the response if
     /// the request is already finished.
-    Continue = 100,
+    pub const Continue: Self = StatusCode(100);
 
     /// 101 Switching Protocols
     ///
     /// This code is sent in response to an Upgrade request header from the
     /// client, and indicates the protocol the server is switching to.
-    SwitchingProtocols = 101,
+    pub const SwitchingProtocols: Self = StatusCode(101);
 
     /// 103 Early Hints
     ///
     /// This status code is primarily intended to be used with the Link header,
     /// letting the user agent start preloading resources while the server
     /// prepares a response.
-    EarlyHints = 103,
+    pub const EarlyHints: Self = StatusCode(103);
 
     /// 200 Ok
     ///
     /// The request has succeeded
-    Ok = 200,
+    pub const Ok: Self = StatusCode(200);
 
     /// 201 Created
     ///
     /// The request has succeeded and a new resource has been created as a
     /// result. This is typically the response sent after POST requests, or
     /// some PUT requests.
-    Created = 201,
+    pub const Created: Self = StatusCode(201);
 
     /// 202 Accepted
     ///
@@ -46,7 +48,7 @@ pub enum StatusCode {
     /// asynchronous response indicating the outcome of the request. It is
     /// intended for cases where another process or server handles the request,
     /// or for batch processing.
-    Accepted = 202,
+    pub const Accepted: Self = StatusCode(202);
 
     /// 203 Non Authoritative Information
     ///
@@ -55,39 +57,39 @@ pub enum StatusCode {
     /// from a local or a third-party copy. This is mostly used for mirrors
     /// or backups of another resource. Except for that specific case, the
     /// "200 OK" response is preferred to this status.
-    NonAuthoritativeInformation = 203,
+    pub const NonAuthoritativeInformation: Self = StatusCode(203);
 
     /// 204 No Content
     ///
     /// There is no content to send for this request, but the headers may be
     /// useful. The user-agent may update its cached headers for this
     /// resource with the new ones.
-    NoContent = 204,
+    pub const NoContent: Self = StatusCode(204);
 
     /// 205 Reset Content
     ///
     /// Tells the user-agent to reset the document which sent this request.
-    ResetContent = 205,
+    pub const ResetContent: Self = StatusCode(205);
 
     /// 206 Partial Content
     ///
     /// This response code is used when the Range header is sent from the client
     /// to request only part of a resource.
-    PartialContent = 206,
+    pub const PartialContent: Self = StatusCode(206);
 
     /// 207 Multi-Status
     ///
     /// A Multi-Status response conveys information about
     /// multiple resources in situations where multiple
     /// status codes might be appropriate.
-    MultiStatus = 207,
+    pub const MultiStatus: Self = StatusCode(207);
 
     /// 226 Im Used
     ///
     /// The server has fulfilled a GET request for the resource, and the
     /// response is a representation of the result of one or more
     /// instance-manipulations applied to the current instance.
-    ImUsed = 226,
+    pub const ImUsed: Self = StatusCode(226);
 
     /// 300 Multiple Choice
     ///
@@ -95,13 +97,13 @@ pub enum StatusCode {
     /// should choose one of them. (There is no standardized way of choosing
     /// one of the responses, but HTML links to the possibilities are
     /// recommended so the user can pick.)
-    MultipleChoice = 300,
+    pub const MultipleChoice: Self = StatusCode(300);
 
     /// 301 Moved Permanently
     ///
     /// The URL of the requested resource has been changed permanently. The new
     /// URL is given in the response.
-    MovedPermanently = 301,
+    pub const MovedPermanently: Self = StatusCode(301);
 
     /// 302 Found
     ///
@@ -109,20 +111,20 @@ pub enum StatusCode {
     /// changed temporarily. Further changes in the URI might be made in the
     /// future. Therefore, this same URI should be used by the client in
     /// future requests.
-    Found = 302,
+    pub const Found: Self = StatusCode(302);
 
     /// 303 See Other
     ///
     /// The server sent this response to direct the client to get the requested
     /// resource at another URI with a GET request.
-    SeeOther = 303,
+    pub const SeeOther: Self = StatusCode(303);
 
     /// 304 Not Modified
     ///
     /// This is used for caching purposes. It tells the client that the response
     /// has not been modified, so the client can continue to use the same
     /// cached version of the response.
-    NotModified = 304,
+    pub const NotModified: Self = StatusCode(304);
 
     /// 307 Temporary Redirect
     ///
@@ -132,7 +134,7 @@ pub enum StatusCode {
     /// code, with the exception that the user agent must not change the
     /// HTTP method used: If a POST was used in the first request, a POST must
     /// be used in the second request.
-    TemporaryRedirect = 307,
+    pub const TemporaryRedirect: Self = StatusCode(307);
 
     /// 308 Permanent Redirect
     ///
@@ -142,7 +144,7 @@ pub enum StatusCode {
     /// exception that the user agent must not change the HTTP method
     /// used: If a POST was used in the first request, a POST must be used in
     /// the second request.
-    PermanentRedirect = 308,
+    pub const PermanentRedirect: Self = StatusCode(308);
 
     /// 400 Bad Request
     ///
@@ -151,7 +153,7 @@ pub enum StatusCode {
     /// Although the HTTP standard specifies "unauthorized", semantically this
     /// response means "unauthenticated". That is, the client must
     /// authenticate itself to get the requested response.
-    BadRequest = 400,
+    pub const BadRequest: Self = StatusCode(400);
 
     /// 401 Unauthorized
     ///
@@ -159,14 +161,14 @@ pub enum StatusCode {
     /// creating this code was using it for digital payment systems, however
     /// this status code is used very rarely and no standard convention
     /// exists.
-    Unauthorized = 401,
+    pub const Unauthorized: Self = StatusCode(401);
 
     /// 402 Payment Required
     ///
     /// The client does not have access rights to the content; that is, it is
     /// unauthorized, so the server is refusing to give the requested
     /// resource. Unlike 401, the client's identity is known to the server.
-    PaymentRequired = 402,
+    pub const PaymentRequired: Self = StatusCode(402);
 
     /// 403 Forbidden
     ///
@@ -176,7 +178,7 @@ pub enum StatusCode {
     /// may also send this response instead of 403 to hide the existence of
     /// a resource from an unauthorized client. This response code is probably
     /// the most famous one due to its frequent occurrence on the web.
-    Forbidden = 403,
+    pub const Forbidden: Self = StatusCode(403);
 
     /// 404 Not Found
     /// The server can not find requested resource. In the browser, this means
@@ -185,7 +187,7 @@ pub enum StatusCode {
     /// may also send this response instead of 403 to hide the existence of
     /// a resource from an unauthorized client. This response code is probably
     /// the most famous one due to its frequent occurrence on the web.
-    NotFound = 404,
+    pub const NotFound: Self = StatusCode(404);
 
     /// 405 Method Not Allowed
     ///
@@ -193,20 +195,20 @@ pub enum StatusCode {
     /// cannot be used. For example, an API may forbid DELETE-ing a
     /// resource. The two mandatory methods, GET and HEAD, must never be
     /// disabled and should not return this error code.
-    MethodNotAllowed = 405,
+    pub const MethodNotAllowed: Self = StatusCode(405);
 
     /// 406 Not Acceptable
     ///
     /// This response is sent when the web server, after performing
     /// server-driven content negotiation, doesn't find any content that
     /// conforms to the criteria given by the user agent.
-    NotAcceptable = 406,
+    pub const NotAcceptable: Self = StatusCode(406);
 
     /// 407 Proxy Authentication Required
     ///
     /// This is similar to 401 but authentication is needed to be done by a
     /// proxy.
-    ProxyAuthenticationRequired = 407,
+    pub const ProxyAuthenticationRequired: Self = StatusCode(407);
 
     /// 408 Request Timeout
     ///
@@ -217,13 +219,13 @@ pub enum StatusCode {
     /// or IE9, use HTTP pre-connection mechanisms to speed up surfing. Also
     /// note that some servers merely shut down the connection without
     /// sending this message.
-    RequestTimeout = 408,
+    pub const RequestTimeout: Self = StatusCode(408);
 
     /// 409 Conflict
     ///
     /// This response is sent when a request conflicts with the current state of
     /// the server.
-    Conflict = 409,
+    pub const Conflict: Self = StatusCode(409);
 
     /// 410 Gone
     ///
@@ -233,55 +235,55 @@ pub enum StatusCode {
     /// specification intends this status code to be used for "limited-time,
     /// promotional services". APIs should not feel compelled to indicate
     /// resources that have been deleted with this status code.
-    Gone = 410,
+    pub const Gone: Self = StatusCode(410);
 
     /// 411 Length Required
     ///
     /// Server rejected the request because the Content-Length header field is
     /// not defined and the server requires it.
-    LengthRequired = 411,
+    pub const LengthRequired: Self = StatusCode(411);
 
     /// 412 Precondition Failed
     ///
     /// The client has indicated preconditions in its headers which the server
     /// does not meet.
-    PreconditionFailed = 412,
+    pub const PreconditionFailed: Self = StatusCode(412);
 
     /// 413 Payload Too Large
     ///
     /// Request entity is larger than limits defined by server; the server might
     /// close the connection or return an Retry-After header field.
-    PayloadTooLarge = 413,
+    pub const PayloadTooLarge: Self = StatusCode(413);
 
     /// 414 URI Too Long
     ///
     /// The URI requested by the client is longer than the server is willing to
     /// interpret.
-    UriTooLong = 414,
+    pub const UriTooLong: Self = StatusCode(414);
 
     /// 415 Unsupported Media Type
     ///
     /// The media format of the requested data is not supported by the server,
     /// so the server is rejecting the request.
-    UnsupportedMediaType = 415,
+    pub const UnsupportedMediaType: Self = StatusCode(415);
 
     /// 416 Requested Range Not Satisfiable
     ///
     /// The range specified by the Range header field in the request can't be
     /// fulfilled; it's possible that the range is outside the size of the
     /// target URI's data.
-    RequestedRangeNotSatisfiable = 416,
+    pub const RequestedRangeNotSatisfiable: Self = StatusCode(416);
 
     /// 417 Expectation Failed
     ///
     /// This response code means the expectation indicated by the Expect request
     /// header field can't be met by the server.
-    ExpectationFailed = 417,
+    pub const ExpectationFailed: Self = StatusCode(417);
     ///
     /// 418 I'm a teapot
     ///
     /// The server refuses the attempt to brew coffee with a teapot.
-    ImATeapot = 418,
+    pub const ImATeapot: Self = StatusCode(418);
 
     /// 421 Misdirected Request
     ///
@@ -289,30 +291,30 @@ pub enum StatusCode {
     /// response. This can be sent by a server that is not configured to
     /// produce responses for the combination of scheme and authority that
     /// are included in the request URI.
-    MisdirectedRequest = 421,
+    pub const MisdirectedRequest: Self = StatusCode(421);
 
     /// 422 Unprocessable Entity
     ///
     /// The request was well-formed but was unable to be followed due to
     /// semantic errors.
-    UnprocessableEntity = 422,
+    pub const UnprocessableEntity: Self = StatusCode(422);
 
     /// 423 Locked
     ///
     /// The resource that is being accessed is locked.
-    Locked = 423,
+    pub const Locked: Self = StatusCode(423);
 
     /// 424 Failed Dependency
     ///
     /// The request failed because it depended on another request and that
     /// request failed (e.g., a PROPPATCH).
-    FailedDependency = 424,
+    pub const FailedDependency: Self = StatusCode(424);
 
     /// 425 Too Early
     ///
     /// Indicates that the server is unwilling to risk processing a request that
     /// might be replayed.
-    TooEarly = 425,
+    pub const TooEarly: Self = StatusCode(425);
 
     /// 426 Upgrade Required
     ///
@@ -320,7 +322,7 @@ pub enum StatusCode {
     /// might be willing to do so after the client upgrades to a different
     /// protocol. The server sends an Upgrade header in a 426 response to
     /// indicate the required protocol(s).
-    UpgradeRequired = 426,
+    pub const UpgradeRequired: Self = StatusCode(426);
 
     /// 428 Precondition Required
     ///
@@ -329,45 +331,45 @@ pub enum StatusCode {
     /// GETs a resource's state, modifies it, and PUTs it back to the
     /// server, when meanwhile a third party has modified the state on the
     /// server, leading to a conflict.
-    PreconditionRequired = 428,
+    pub const PreconditionRequired: Self = StatusCode(428);
 
     /// 429 Too Many Requests
     ///
     /// The user has sent too many requests in a given amount of time ("rate
     /// limiting").
-    TooManyRequests = 429,
+    pub const TooManyRequests: Self = StatusCode(429);
 
     /// 431 Request Header Fields Too Large
     ///
     /// The server is unwilling to process the request because its header fields
     /// are too large. The request may be resubmitted after reducing the
     /// size of the request header fields.
-    RequestHeaderFieldsTooLarge = 431,
+    pub const RequestHeaderFieldsTooLarge: Self = StatusCode(431);
 
     /// 451 Unavailable For Legal Reasons
     ///
     /// The user-agent requested a resource that cannot legally be provided,
     /// such as a web page censored by a government.
-    UnavailableForLegalReasons = 451,
+    pub const UnavailableForLegalReasons: Self = StatusCode(451);
 
     /// 500 Internal Server Error
     ///
     /// The server has encountered a situation it doesn't know how to handle.
-    InternalServerError = 500,
+    pub const InternalServerError: Self = StatusCode(500);
 
     /// 501 Not Implemented
     ///
     /// The request method is not supported by the server and cannot be handled.
     /// The only methods that servers are required to support (and therefore
     /// that must not return this code) are GET and HEAD.
-    NotImplemented = 501,
+    pub const NotImplemented: Self = StatusCode(501);
 
     /// 502 Bad Gateway
     ///
     /// This error response means that the server, while working as a gateway to
     /// get a response needed to handle the request, got an invalid
     /// response.
-    BadGateway = 502,
+    pub const BadGateway: Self = StatusCode(502);
 
     /// 503 Service Unavailable
     ///
@@ -380,18 +382,18 @@ pub enum StatusCode {
     /// must also take care about the caching-related headers that are sent
     /// along with this response, as these temporary condition responses
     /// should usually not be cached.
-    ServiceUnavailable = 503,
+    pub const ServiceUnavailable: Self = StatusCode(503);
 
     /// 504 Gateway Timeout
     ///
     /// This error response is given when the server is acting as a gateway and
     /// cannot get a response in time.
-    GatewayTimeout = 504,
+    pub const GatewayTimeout: Self = StatusCode(504);
 
     /// 505 HTTP Version Not Supported
     ///
     /// The HTTP version used in the request is not supported by the server.
-    HttpVersionNotSupported = 505,
+    pub const HttpVersionNotSupported: Self = StatusCode(505);
 
     /// 506 Variant Also Negotiates
     ///
@@ -399,33 +401,31 @@ pub enum StatusCode {
     /// resource is configured to engage in transparent content negotiation
     /// itself, and is therefore not a proper end point in the negotiation
     /// process.
-    VariantAlsoNegotiates = 506,
+    pub const VariantAlsoNegotiates: Self = StatusCode(506);
 
     /// 507 Insufficient Storage
     ///
     /// The server is unable to store the representation needed to complete the
     /// request.
-    InsufficientStorage = 507,
+    pub const InsufficientStorage: Self = StatusCode(507);
 
     /// 508 Loop Detected
     ///
     /// The server detected an infinite loop while processing the request.
-    LoopDetected = 508,
+    pub const LoopDetected: Self = StatusCode(508);
 
     /// 510 Not Extended
     ///
     /// Further extensions to the request are required for the server to fulfil
     /// it.
-    NotExtended = 510,
+    pub const NotExtended: Self = StatusCode(510);
 
     /// 511 Network Authentication Required
     ///
     /// The 511 status code indicates that the client needs to authenticate to
     /// gain network access.
-    NetworkAuthenticationRequired = 511,
-}
+    pub const NetworkAuthenticationRequired: Self = StatusCode(511);
 
-impl StatusCode {
     /// Returns `true` if the status code is `1xx` range.
     ///
     /// If this returns `true` it indicates that the request was received,
@@ -473,7 +473,7 @@ impl StatusCode {
 
     /// The canonical reason for a given status code
     pub fn canonical_reason(&self) -> &'static str {
-        match self {
+        match *self {
             StatusCode::Continue => "Continue",
             StatusCode::SwitchingProtocols => "Switching Protocols",
             StatusCode::EarlyHints => "Early Hints",
@@ -533,99 +533,98 @@ impl StatusCode {
             StatusCode::LoopDetected => "Loop Detected",
             StatusCode::NotExtended => "Not Extended",
             StatusCode::NetworkAuthenticationRequired => "Network Authentication Required",
+            _ => "Unknown Status Code",
         }
     }
 }
 
 impl From<StatusCode> for u16 {
     fn from(code: StatusCode) -> u16 {
-        code as u16
+        code.0
     }
 }
 
-impl std::convert::TryFrom<u16> for StatusCode {
-    type Error = crate::Error;
-
-    fn try_from(num: u16) -> Result<Self, Self::Error> {
+impl std::convert::From<u16> for StatusCode {
+    fn from(num: u16) -> Self {
         match num {
-            100 => Ok(StatusCode::Continue),
-            101 => Ok(StatusCode::SwitchingProtocols),
-            103 => Ok(StatusCode::EarlyHints),
-            200 => Ok(StatusCode::Ok),
-            201 => Ok(StatusCode::Created),
-            202 => Ok(StatusCode::Accepted),
-            203 => Ok(StatusCode::NonAuthoritativeInformation),
-            204 => Ok(StatusCode::NoContent),
-            205 => Ok(StatusCode::ResetContent),
-            206 => Ok(StatusCode::PartialContent),
-            207 => Ok(StatusCode::MultiStatus),
-            226 => Ok(StatusCode::ImUsed),
-            300 => Ok(StatusCode::MultipleChoice),
-            301 => Ok(StatusCode::MovedPermanently),
-            302 => Ok(StatusCode::Found),
-            303 => Ok(StatusCode::SeeOther),
-            304 => Ok(StatusCode::NotModified),
-            307 => Ok(StatusCode::TemporaryRedirect),
-            308 => Ok(StatusCode::PermanentRedirect),
-            400 => Ok(StatusCode::BadRequest),
-            401 => Ok(StatusCode::Unauthorized),
-            402 => Ok(StatusCode::PaymentRequired),
-            403 => Ok(StatusCode::Forbidden),
-            404 => Ok(StatusCode::NotFound),
-            405 => Ok(StatusCode::MethodNotAllowed),
-            406 => Ok(StatusCode::NotAcceptable),
-            407 => Ok(StatusCode::ProxyAuthenticationRequired),
-            408 => Ok(StatusCode::RequestTimeout),
-            409 => Ok(StatusCode::Conflict),
-            410 => Ok(StatusCode::Gone),
-            411 => Ok(StatusCode::LengthRequired),
-            412 => Ok(StatusCode::PreconditionFailed),
-            413 => Ok(StatusCode::PayloadTooLarge),
-            414 => Ok(StatusCode::UriTooLong),
-            415 => Ok(StatusCode::UnsupportedMediaType),
-            416 => Ok(StatusCode::RequestedRangeNotSatisfiable),
-            417 => Ok(StatusCode::ExpectationFailed),
-            418 => Ok(StatusCode::ImATeapot),
-            421 => Ok(StatusCode::MisdirectedRequest),
-            422 => Ok(StatusCode::UnprocessableEntity),
-            423 => Ok(StatusCode::Locked),
-            424 => Ok(StatusCode::FailedDependency),
-            425 => Ok(StatusCode::TooEarly),
-            426 => Ok(StatusCode::UpgradeRequired),
-            428 => Ok(StatusCode::PreconditionRequired),
-            429 => Ok(StatusCode::TooManyRequests),
-            431 => Ok(StatusCode::RequestHeaderFieldsTooLarge),
-            451 => Ok(StatusCode::UnavailableForLegalReasons),
-            500 => Ok(StatusCode::InternalServerError),
-            501 => Ok(StatusCode::NotImplemented),
-            502 => Ok(StatusCode::BadGateway),
-            503 => Ok(StatusCode::ServiceUnavailable),
-            504 => Ok(StatusCode::GatewayTimeout),
-            505 => Ok(StatusCode::HttpVersionNotSupported),
-            506 => Ok(StatusCode::VariantAlsoNegotiates),
-            507 => Ok(StatusCode::InsufficientStorage),
-            508 => Ok(StatusCode::LoopDetected),
-            510 => Ok(StatusCode::NotExtended),
-            511 => Ok(StatusCode::NetworkAuthenticationRequired),
-            _ => crate::bail!("Invalid status code"),
+            100 => StatusCode::Continue,
+            101 => StatusCode::SwitchingProtocols,
+            103 => StatusCode::EarlyHints,
+            200 => StatusCode::Ok,
+            201 => StatusCode::Created,
+            202 => StatusCode::Accepted,
+            203 => StatusCode::NonAuthoritativeInformation,
+            204 => StatusCode::NoContent,
+            205 => StatusCode::ResetContent,
+            206 => StatusCode::PartialContent,
+            207 => StatusCode::MultiStatus,
+            226 => StatusCode::ImUsed,
+            300 => StatusCode::MultipleChoice,
+            301 => StatusCode::MovedPermanently,
+            302 => StatusCode::Found,
+            303 => StatusCode::SeeOther,
+            304 => StatusCode::NotModified,
+            307 => StatusCode::TemporaryRedirect,
+            308 => StatusCode::PermanentRedirect,
+            400 => StatusCode::BadRequest,
+            401 => StatusCode::Unauthorized,
+            402 => StatusCode::PaymentRequired,
+            403 => StatusCode::Forbidden,
+            404 => StatusCode::NotFound,
+            405 => StatusCode::MethodNotAllowed,
+            406 => StatusCode::NotAcceptable,
+            407 => StatusCode::ProxyAuthenticationRequired,
+            408 => StatusCode::RequestTimeout,
+            409 => StatusCode::Conflict,
+            410 => StatusCode::Gone,
+            411 => StatusCode::LengthRequired,
+            412 => StatusCode::PreconditionFailed,
+            413 => StatusCode::PayloadTooLarge,
+            414 => StatusCode::UriTooLong,
+            415 => StatusCode::UnsupportedMediaType,
+            416 => StatusCode::RequestedRangeNotSatisfiable,
+            417 => StatusCode::ExpectationFailed,
+            418 => StatusCode::ImATeapot,
+            421 => StatusCode::MisdirectedRequest,
+            422 => StatusCode::UnprocessableEntity,
+            423 => StatusCode::Locked,
+            424 => StatusCode::FailedDependency,
+            425 => StatusCode::TooEarly,
+            426 => StatusCode::UpgradeRequired,
+            428 => StatusCode::PreconditionRequired,
+            429 => StatusCode::TooManyRequests,
+            431 => StatusCode::RequestHeaderFieldsTooLarge,
+            451 => StatusCode::UnavailableForLegalReasons,
+            500 => StatusCode::InternalServerError,
+            501 => StatusCode::NotImplemented,
+            502 => StatusCode::BadGateway,
+            503 => StatusCode::ServiceUnavailable,
+            504 => StatusCode::GatewayTimeout,
+            505 => StatusCode::HttpVersionNotSupported,
+            506 => StatusCode::VariantAlsoNegotiates,
+            507 => StatusCode::InsufficientStorage,
+            508 => StatusCode::LoopDetected,
+            510 => StatusCode::NotExtended,
+            511 => StatusCode::NetworkAuthenticationRequired,
+            n => StatusCode(n),
         }
     }
 }
 
 impl PartialEq<StatusCode> for u16 {
     fn eq(&self, other: &StatusCode) -> bool {
-        *self == *other as u16
+        *self == u16::from(*other)
     }
 }
 
 impl PartialEq<u16> for StatusCode {
     fn eq(&self, other: &u16) -> bool {
-        *self as u16 == *other
+        u16::from(*self) == *other
     }
 }
 
 impl Display for StatusCode {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", *self as u16)
+        write!(f, "{}", u16::from(*self))
     }
 }
