@@ -431,8 +431,7 @@ impl StatusCode {
     /// If this returns `true` it indicates that the request was received,
     /// continuing process.
     pub fn is_informational(&self) -> bool {
-        let num: u16 = self.clone().into();
-        num >= 100 && num < 200
+        self.0 >= 100 && self.0 < 200
     }
 
     /// Returns `true` if the status code is the `2xx` range.
@@ -440,8 +439,7 @@ impl StatusCode {
     /// If this returns `true` it indicates that the request was successfully
     /// received, understood, and accepted.
     pub fn is_success(&self) -> bool {
-        let num: u16 = self.clone().into();
-        num >= 200 && num < 300
+        self.0 >= 200 && self.0 < 300
     }
 
     /// Returns `true` if the status code is the `3xx` range.
@@ -449,8 +447,7 @@ impl StatusCode {
     /// If this returns `true` it indicates that further action needs to be
     /// taken in order to complete the request.
     pub fn is_redirection(&self) -> bool {
-        let num: u16 = self.clone().into();
-        num >= 300 && num < 400
+        self.0 >= 300 && self.0 < 400
     }
 
     /// Returns `true` if the status code is the `4xx` range.
@@ -458,8 +455,7 @@ impl StatusCode {
     /// If this returns `true` it indicates that the request contains bad syntax
     /// or cannot be fulfilled.
     pub fn is_client_error(&self) -> bool {
-        let num: u16 = self.clone().into();
-        num >= 400 && num < 500
+        self.0 >= 400 && self.0 < 500
     }
 
     /// Returns `true` if the status code is the `5xx` range.
@@ -467,8 +463,76 @@ impl StatusCode {
     /// If this returns `true` it indicates that the server failed to fulfill an
     /// apparently valid request.
     pub fn is_server_error(&self) -> bool {
-        let num: u16 = self.clone().into();
-        num >= 500 && num < 600
+        self.0 >= 500 && self.0 < 600
+    }
+
+    /// Returns `true` if the status code is unknown.
+    ///
+    /// If this returns `true` it indicates that the request contained an unknown and non-standard
+    /// status code.
+    pub fn is_unknown(&self) -> bool {
+        match *self {
+            StatusCode::Continue
+            | StatusCode::SwitchingProtocols
+            | StatusCode::EarlyHints
+            | StatusCode::Ok
+            | StatusCode::Created
+            | StatusCode::Accepted
+            | StatusCode::NonAuthoritativeInformation
+            | StatusCode::NoContent
+            | StatusCode::ResetContent
+            | StatusCode::PartialContent
+            | StatusCode::MultiStatus
+            | StatusCode::ImUsed
+            | StatusCode::MultipleChoice
+            | StatusCode::MovedPermanently
+            | StatusCode::Found
+            | StatusCode::SeeOther
+            | StatusCode::NotModified
+            | StatusCode::TemporaryRedirect
+            | StatusCode::PermanentRedirect
+            | StatusCode::BadRequest
+            | StatusCode::Unauthorized
+            | StatusCode::PaymentRequired
+            | StatusCode::Forbidden
+            | StatusCode::NotFound
+            | StatusCode::MethodNotAllowed
+            | StatusCode::NotAcceptable
+            | StatusCode::ProxyAuthenticationRequired
+            | StatusCode::RequestTimeout
+            | StatusCode::Conflict
+            | StatusCode::Gone
+            | StatusCode::LengthRequired
+            | StatusCode::PreconditionFailed
+            | StatusCode::PayloadTooLarge
+            | StatusCode::UriTooLong
+            | StatusCode::UnsupportedMediaType
+            | StatusCode::RequestedRangeNotSatisfiable
+            | StatusCode::ExpectationFailed
+            | StatusCode::ImATeapot
+            | StatusCode::MisdirectedRequest
+            | StatusCode::UnprocessableEntity
+            | StatusCode::Locked
+            | StatusCode::FailedDependency
+            | StatusCode::TooEarly
+            | StatusCode::UpgradeRequired
+            | StatusCode::PreconditionRequired
+            | StatusCode::TooManyRequests
+            | StatusCode::RequestHeaderFieldsTooLarge
+            | StatusCode::UnavailableForLegalReasons
+            | StatusCode::InternalServerError
+            | StatusCode::NotImplemented
+            | StatusCode::BadGateway
+            | StatusCode::ServiceUnavailable
+            | StatusCode::GatewayTimeout
+            | StatusCode::HttpVersionNotSupported
+            | StatusCode::VariantAlsoNegotiates
+            | StatusCode::InsufficientStorage
+            | StatusCode::LoopDetected
+            | StatusCode::NotExtended
+            | StatusCode::NetworkAuthenticationRequired => false,
+            _ => true,
+        }
     }
 
     /// The canonical reason for a given status code
@@ -626,5 +690,16 @@ impl PartialEq<u16> for StatusCode {
 impl Display for StatusCode {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", u16::from(*self))
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::StatusCode;
+
+    #[test]
+    fn check_unknown_status_code() {
+        assert!(!StatusCode(417).is_unknown());
+        assert!(StatusCode(604).is_unknown());
     }
 }
