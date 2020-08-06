@@ -476,6 +476,17 @@ impl StatusCode {
         num >= 500 && num < 600
     }
 
+    /// Returns `true` if the status code is unknown.
+    ///
+    /// If this returns `true` it indicates that the request has an unkown and non-standard status code.
+    pub fn is_unknown(&self) -> bool {
+        if let StatusCode::Unknown(_) = *self {
+            true
+        } else {
+            false
+        }
+    }
+
     /// The canonical reason for a given status code
     pub fn canonical_reason(&self) -> &'static str {
         match self {
@@ -692,5 +703,16 @@ impl PartialEq<u16> for StatusCode {
 impl Display for StatusCode {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", u16::from(*self))
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::StatusCode;
+
+    #[test]
+    fn check_unknown_status_code() {
+        assert!(!StatusCode::from(417).is_unknown());
+        assert!(StatusCode::from(604).is_unknown());
     }
 }
